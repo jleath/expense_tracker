@@ -1,0 +1,18 @@
+#! /usr/bin/env ruby
+
+require 'pg'
+
+def expense_details_str(tuple)
+  columns = [ tuple['id'].rjust(3),
+              tuple['created_on'].rjust(10),
+              tuple['amount'].rjust(12),
+              tuple['memo'] ]
+  columns.join(' | ')
+end
+
+expenses_db = PG.connect(dbname: 'expenses')
+expenses = expenses_db.exec('SELECT * FROM expenses;')
+
+expenses.each do |tuple|
+  puts expense_details_str(tuple)
+end
